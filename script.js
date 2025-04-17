@@ -39,7 +39,7 @@ function getQuotes() {
     .then(response => response.json())
     .then(jsonQuotes => {
       quotesData = jsonQuotes;
-      console.log("Quoteslate API:", jsonQuotes);
+      // console.log("Quoteslate API:", jsonQuotes);
     })
     .catch(error => console.error('Error fetching quotes:', error));
 }
@@ -52,25 +52,18 @@ function getRandomQuote() {
 
 function getQuote() {
   let randomQuote = getRandomQuote();
-
+  
   currentQuote = randomQuote.quote;
   currentAuthor = randomQuote.author;
   currrentTags = randomQuote.tags;
-  console.log("Tags:", currrentTags);
   $('#tweet-quote').attr(
     'href',
-    'https://twitter.com/intent/tweet?hashtags=quotes&related=freecodecamp&text=' +
+    'https://twitter.com/intent/tweet?hashtags=' + 
+      encodeURIComponent(JSON.stringify(currrentTags)) + 
+      '&text=' +
       encodeURIComponent('"' + currentQuote + '" ' + currentAuthor)
   );
 
-  // $('#tumblr-quote').attr(
-  //   'href',
-  //   'https://www.tumblr.com/widgets/share/tool?posttype=quote&tags=quotes,freecodecamp&caption=' +
-  //     encodeURIComponent(currentAuthor) +
-  //     '&content=' +
-  //     encodeURIComponent(currentQuote) +
-  //     '&canonicalUrl=https%3A%2F%2Fwww.tumblr.com%2Fbuttons&shareSource=tumblr_share_button'
-  // );
   $('#facebook-quote').attr(
     'href','https://www.facebook.com/sharer/sharer.php?app_id=1013377680283399&sdk=joey&u='
   );
@@ -105,6 +98,5 @@ $(document).ready(function () {
   getQuotes().then(() => {
     getQuote();
   });
-
   $('#new-quote').on('click', getQuote);
 });
